@@ -2,13 +2,12 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="E:/Java/Jars/lwjgl.jar">
+	<classpathentry kind="lib" path="C:/Program Files (x86)/BRS/lwjgl.jar">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="E:/Java/LWJGL natives/windows"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Users/Ryan&apos;s/Downloads/LWJGL natives/windows"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="E:/Java/Jars/lwjgl_util.jar"/>
-	<classpathentry kind="lib" path="E:/Java/Jars/slick.jar"/>
-	<classpathentry kind="lib" path="C:/Users/kie/Documents/GitHub/WateringCan.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files (x86)/BRS/lwjgl_util.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files (x86)/BRS/WateringCan.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
