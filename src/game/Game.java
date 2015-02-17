@@ -7,7 +7,6 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import core.Camera;
-import core.Time;
 import core.Window;
 import core.render.MeshObject;
 import core.render.OBJLoader;
@@ -24,6 +23,11 @@ public class Game {
 	private MeshObject object, object2, object3;
 	
 	public Game() {
+		setup();
+		start();
+	}
+
+	private void setup() {
 		Window.createWindow(800, 600, 3.2);
 		Window.enableDepthBuffer();
 		Window.enableCullFace(2);
@@ -32,6 +36,7 @@ public class Game {
 		cam = new Camera(70, Window.getAspectRatio(), 0.1f, 100f);
 
 		mesh2 = new TexturedMesh(shader.getProjectionMatrixLocation(), shader, "image0.png", cam);
+		//loads 'new TexturedMesh' from a file instead
 		meshOBJ = OBJLoader.load("C:/Users/kie/Documents/GitHub/LWJGL_Game/Game/bin/stall.obj", "C:/Users/kie/Documents/GitHub/LWJGL_Game/Game/bin/stall.png", shader.getProjectionMatrixLocation(), shader, cam);
 		object = new MeshObject(mesh2, new Vector3f(0, 0, -2), 0, 0, 0, 1);
 		mesh2.add(getVectorVertices(), getVectorTexCoords(), getIndices());
@@ -53,33 +58,34 @@ public class Game {
 			float zrot = (r.nextFloat());
 			mo.setRotation(xrot, yrot, zrot);
 			list.add(mo);
-
 		}
+	}
 
+	private void start() {
 		while (!Window.isCloseRequested()) {
 			cam.move();
 			Window.clearAll(0, 1, 0, 0);
-			shader.bind();
-			shader.loadViewMatrix(cam);
-			{
-//				mesh2.draw(shader.getModelMatrixLocation(), object);
-//				meshOBJ.draw(shader.getModelMatrixLocation(), object2);
-//				mesh2.draw(shader.getModelMatrixLocation(), object3);
-//				object2.rotate(new Vector3f(0f, 0f, 0f));
-				
-				meshOBJ.draw(shader.getModelMatrixLocation(), list);
-				
-//				for (int I = 0; I < list.size(); I++) {
-//					meshOBJ.draw(shader.getModelMatrixLocation(), list.get(I));
-//					list.get(I).rotate(new Vector3f(r.nextFloat(), 0f, 0f));
-//				}
-			}
-			shader.unbind();
-			Window.update();
-			// Window.sync(60);
+			render();
+			update();
 		}
 
 		Window.close();
+	}
+
+	private void render() {
+		shader.bind();
+		shader.loadViewMatrix(cam);
+		{
+			//instead of making a loop it takes 'list' as an argument
+			meshOBJ.draw(shader.getModelMatrixLocation(), list);
+		}
+		shader.unbind();
+		Window.update();
+		// Window.sync(60);
+	}
+
+	private void update() {
+		//TODO added input updates
 	}
 
 	private double getPercentage(double current, double max) {
