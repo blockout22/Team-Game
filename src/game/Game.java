@@ -20,6 +20,7 @@ public class Game {
 	private TexturedMesh mesh2, meshOBJ;
 	private Random r = new Random();
 	private ArrayList<MeshObject> list = new ArrayList<MeshObject>();
+	private ArrayList<MeshObject> list2 = new ArrayList<MeshObject>();
 	private MeshObject object, object2, object3;
 	
 	public Game() {
@@ -33,17 +34,20 @@ public class Game {
 		Window.enableCullFace(2);
 
 		shader = new GameShader();
-		cam = new Camera(70, Window.getAspectRatio(), 0.1f, 100f);
+		cam = new Camera(70, Window.getAspectRatio(), 0.1f, 10000f);
 
-		mesh2 = new TexturedMesh(shader.getProjectionMatrixLocation(), shader, "image0.png", cam);
 		//loads 'new TexturedMesh' from a file instead
 		meshOBJ = OBJLoader.load("C:/Users/kie/Documents/GitHub/LWJGL_Game/Game/bin/stall.obj", "C:/Users/kie/Documents/GitHub/LWJGL_Game/Game/bin/stall.png", shader.getProjectionMatrixLocation(), shader, cam);
-		object = new MeshObject(mesh2, new Vector3f(0, 0, -2), 0, 0, 0, 1);
+		mesh2 = new TexturedMesh(shader.getProjectionMatrixLocation(), shader, "crate.png", cam);
 		mesh2.add(getVectorVertices(), getVectorTexCoords(), getIndices());
-		object2 = new MeshObject(meshOBJ, new Vector3f(2, 0, -20), 0, 0, 0, 2);
-		object3 = new MeshObject(mesh2, new Vector3f(5, 7, -20), 0, 0, 0, 1);
+		object = new MeshObject(new Vector3f(0, 0, -2), 0, 0, 0, 2);
+		object2 = new MeshObject(new Vector3f(2, 0, -20), 0, 0, 0, 1);
+		object3 = new MeshObject(new Vector3f(5, 7, -20), 0, 0, 0, 1);
+		list2.add(object);
+		list2.add(object2);
+		list.add(object3);
 
-		int objecttotal = 10000;
+		int objecttotal = 50000;
 		double percentage = 0;
 
 		for (int I = 0; I < objecttotal; I++) {
@@ -52,7 +56,7 @@ public class Game {
 			int x = r.nextInt(400) -150;
 			int y = -(r.nextInt(450)) + 200;
 			int z = -(r.nextInt(450)) + 50;
-			MeshObject mo = new MeshObject(mesh2, new Vector3f(x, y, z), 0, 0, 0, 1);
+			MeshObject mo = new MeshObject(new Vector3f(x, y, z), 0, 0, 0, 1);
 			float xrot = r.nextFloat();
 			float yrot = (r.nextFloat());
 			float zrot = (r.nextFloat());
@@ -76,6 +80,7 @@ public class Game {
 		shader.bind();
 		shader.loadViewMatrix(cam);
 		{
+			mesh2.draw(shader.getModelMatrixLocation(), list2);
 			//instead of making a loop it takes 'list' as an argument
 			meshOBJ.draw(shader.getModelMatrixLocation(), list);
 		}
