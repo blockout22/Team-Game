@@ -7,10 +7,11 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import core.Camera;
+import core.Time;
 import core.Window;
 import core.render.MeshObject;
-import core.render.OBJLoader;
 import core.render.TexturedMesh;
+import core.render.temp.TempOBJLoader;
 
 public class Game {
 
@@ -37,17 +38,17 @@ public class Game {
 		cam = new Camera(70, Window.getAspectRatio(), 0.1f, 10000f);
 
 		//loads 'new TexturedMesh' from a file instead
-		meshOBJ = OBJLoader.load("C:/Users/kie/Documents/GitHub/LWJGL_Game/Game/bin/stall.obj", "C:/Users/kie/Documents/GitHub/LWJGL_Game/Game/bin/stall.png", shader.getProjectionMatrixLocation(), shader, cam);
-		mesh2 = new TexturedMesh(shader.getProjectionMatrixLocation(), shader, "crate.png", cam);
+		meshOBJ = TempOBJLoader.load("C:/Users/kie/Documents/GitHub/LWJGL_Game/Game/bin/stall.obj", "C:/Users/kie/Documents/GitHub/LWJGL_Game/Game/bin/stall.png", shader.getProjectionMatrixLocation(), shader, cam);
+		mesh2 = new TexturedMesh(shader.getProjectionMatrixLocation(), shader, "image0.png", cam);
 		mesh2.add(getVectorVertices(), getVectorTexCoords(), getIndices());
-		object = new MeshObject(new Vector3f(0, 0, -2), 0, 0, 0, 2);
+		object = new MeshObject(new Vector3f(0, 0, -2), 0, 0, 0, 1);
 		object2 = new MeshObject(new Vector3f(2, 0, -20), 0, 0, 0, 1);
 		object3 = new MeshObject(new Vector3f(5, 7, -20), 0, 0, 0, 1);
 		list2.add(object);
 		list2.add(object2);
 		list.add(object3);
 
-		int objecttotal = 50000;
+		int objecttotal = 5000;
 		double percentage = 0;
 
 		for (int I = 0; I < objecttotal; I++) {
@@ -83,6 +84,7 @@ public class Game {
 			mesh2.draw(shader.getModelMatrixLocation(), list2);
 			//instead of making a loop it takes 'list' as an argument
 			meshOBJ.draw(shader.getModelMatrixLocation(), list);
+			list.get(0).rotate(0.1f, 0.1f, 0.1f);
 		}
 		shader.unbind();
 		Window.update();
@@ -91,6 +93,7 @@ public class Game {
 
 	private void update() {
 		//TODO added input updates
+//		Input.update(Time.getDelta());
 	}
 
 	private double getPercentage(double current, double max) {
@@ -101,8 +104,8 @@ public class Game {
 	private int[] getIndices() {
 		int[] indices = new int[] {
 				//
-				0, 1, 2, //
-				2, 3, 0 //
+				2, 1, 0, //
+				0, 3, 2 //
 		};
 
 		return indices;
