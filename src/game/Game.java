@@ -7,6 +7,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import core.Camera;
+import core.Time;
 import core.Window;
 import core.render.MeshObject;
 import core.render.TexturedMesh;
@@ -22,6 +23,11 @@ public class Game {
 	private ArrayList<MeshObject> list = new ArrayList<MeshObject>();
 	private ArrayList<MeshObject> list2 = new ArrayList<MeshObject>();
 	private MeshObject object, object2, object3;
+
+	private float red, green, blue;
+	
+	private Thread genColorThread;
+	private boolean genColorThreadIsAlive = false;
 
 	public Game() {
 		setup();
@@ -50,6 +56,10 @@ public class Game {
 		int objecttotal = 1;
 		double percentage = 0;
 
+		red = 0;
+		green = 0;
+		blue = 0;
+
 		// for (int I = 0; I < objecttotal; I++) {
 		// percentage = getPercentage(I, objecttotal);
 		// System.out.println(percentage + "%");
@@ -65,50 +75,150 @@ public class Game {
 		// }
 	}
 
-	boolean isLoaded = false;
-
 	private void start() {
+		test();
 		while (!Window.isCloseRequested()) {
-			if (isLoaded == false) {
-				test();
-				isLoaded = true;
-			}
-			cam.move();
-			Window.clearAll(0, 1, 0, 0);
+			// cam.move();
+			Window.clearAll(red, green, blue, 0);
+			update();
 			try {
 				render();
 			} catch (Exception e) {
 			}
-			update();
 		}
 
 		Window.close();
+	}
+
+	public void generateClearAllColors() {
+		if(genColorThreadIsAlive)
+		{
+			System.out.println("Already genrating");
+			return;
+		}
+		genColorThread = new Thread(new Runnable() {
+			public void run() {
+				genColorThreadIsAlive = true;
+				float lastR = red;
+				float lastG = green;
+				float lastB = blue;
+
+				float cR = Float.valueOf(r.nextInt(255)) / 255;
+				float cG = Float.valueOf(r.nextInt(255)) / 255;
+				float cB = Float.valueOf(r.nextInt(255)) / 255;
+
+				if (lastR < cR) {
+					while (true) {
+						if (red >= cR) {
+							break;
+						}
+						red += 0.01f;
+						try {
+							Thread.sleep(10);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+				} else
+
+				if (lastR > cR) {
+					while (true) {
+						if (red <= cR) {
+							break;
+						}
+						red -= 0.01f;
+						try {
+							Thread.sleep(10);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+
+				if (lastG < cG) {
+					while (true) {
+						if (green >= cG) {
+							break;
+						}
+						green += 0.01f;
+						try {
+							Thread.sleep(10);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+				} else
+
+				if (lastG > cG) {
+					while (true) {
+						if (green <= cG) {
+							break;
+						}
+						green -= 0.01f;
+						try {
+							Thread.sleep(10);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+
+				if (lastB < cB) {
+					while (true) {
+						if (blue >= cB) {
+							break;
+						}
+						blue += 0.01f;
+						try {
+							Thread.sleep(10);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+				} else
+
+				if (lastB > cB) {
+					while (true) {
+						if (blue <= cB) {
+							break;
+						}
+						blue -= 0.01f;
+						try {
+							Thread.sleep(10);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+				
+				genColorThreadIsAlive = false;
+			}
+		});
+		genColorThread.start();
 	}
 
 	private void test() {
 		new Thread(new Runnable() {
 			public void run() {
 				int i = 0;
-				System.out.println("Starting to add shit");
-				while (i < 10000) {
+				while (i < 1000) {
 					try {
 						i++;
-						int x = r.nextInt(400) - 150;
-						int y = -(r.nextInt(450)) + 200;
-						int z = -(r.nextInt(450)) + 50;
+						int x = r.nextInt(1900) - 150;
+						int y = -(r.nextInt(1950)) + 200;
+						int z = -(r.nextInt(1950)) + 50;
 						MeshObject mo = new MeshObject(new Vector3f(x, y, z), 0, 0, 0, 1);
 						float xrot = r.nextFloat();
 						float yrot = (r.nextFloat());
 						float zrot = (r.nextFloat());
 						mo.setRotation(xrot, yrot, zrot);
 						list.add(mo);
-						System.out.println("Added at X: " + x + " y: " + y + " z: " + z);
 						Thread.sleep(5);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 				}
-				
+
 			}
 		}).start();
 	}
@@ -129,7 +239,11 @@ public class Game {
 
 	private void update() {
 		// TODO added input updates
-		// Input.update(Time.getDelta());
+		Input.update(Time.getDelta(), this);
+	}
+
+	public Camera getCamera() {
+		return cam;
 	}
 
 	private double getPercentage(double current, double max) {
